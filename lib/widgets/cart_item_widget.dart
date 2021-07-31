@@ -65,6 +65,40 @@ class CartItemWidget extends StatelessWidget {
                       Text('X $quantity'),
                     ],
                   ),
+                  // Column(
+                  //   children: [
+                  //     Row(
+                  //       mainAxisAlignment: MainAxisAlignment.center,
+                  //       children: [
+                  //         IconButton(
+                  //           onPressed: () {
+                  //             setState(() {
+                  //               if (widget.quantity <= 1) {
+                  //                 widget.quantity = 1;
+                  //               } else {
+                  //                 widget.quantity--;
+                  //               }
+                  //             });
+                  //             // print(quantity);
+                  //           },
+                  //           icon: Icon(Icons.remove),
+                  //         ),
+                  //         SizedBox(width: 10.0),
+                  //         Text(widget.quantity.toString()),
+                  //         SizedBox(width: 10.0),
+                  //         IconButton(
+                  //           onPressed: () {
+                  //             setState(() {
+                  //               widget.quantity++;
+                  //             });
+                  //             // print(quantity);
+                  //           },
+                  //           icon: Icon(Icons.add),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ],
+                  // ),
                   Row(
                     children: [
                       Text('\$$price'),

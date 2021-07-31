@@ -59,19 +59,30 @@ class CartScreen extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: cart.itemCount,
-              itemBuilder: (ctx, i) => CartItemWidget(
-                id: cart.items.values.toList()[i].id,
-                productId: cart.items.keys.toList()[i],
-                imageUrl: cart.items.values.toList()[i].imageUrl,
-                price: cart.items.values.toList()[i].price,
-                quantity: cart.items.values.toList()[i].quantity,
-                title: cart.items.values.toList()[i].title,
-              ),
-            ),
-          ),
+          // cart.itemsisEmpty
+          cart.items.values.toList().isEmpty
+              ? Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Nothing in Cart',
+                    style: TextStyle(
+                      fontSize: 30.0,
+                    ),
+                  ),
+                )
+              : Expanded(
+                  child: ListView.builder(
+                    itemCount: cart.itemCount,
+                    itemBuilder: (ctx, i) => CartItemWidget(
+                      id: cart.items.values.toList()[i].id,
+                      productId: cart.items.keys.toList()[i],
+                      imageUrl: cart.items.values.toList()[i].imageUrl,
+                      price: cart.items.values.toList()[i].price,
+                      quantity: cart.items.values.toList()[i].quantity,
+                      title: cart.items.values.toList()[i].title,
+                    ),
+                  ),
+                ),
         ],
       ),
     );

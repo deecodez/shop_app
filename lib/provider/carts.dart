@@ -20,7 +20,8 @@ class Cart with ChangeNotifier {
     return total;
   }
 
-  void addItem(String productId, String title, double price, String imageUrl) {
+  void addItem(String productId, String title, double price, String imageUrl,
+      int quantity) {
     if (_items.containsKey(productId)) {
       //if the specific item exist then we increase the quantity
       _items.update(
@@ -30,7 +31,7 @@ class Cart with ChangeNotifier {
           title: existingCartItem.title,
           imageUrl: existingCartItem.imageUrl,
           price: existingCartItem.price,
-          quantity: existingCartItem.quantity + 1,
+          quantity: quantity,
         ),
       );
     } else {
@@ -42,12 +43,40 @@ class Cart with ChangeNotifier {
           title: title,
           imageUrl: imageUrl,
           price: price,
-          quantity: 1,
+          quantity: quantity,
         ),
       );
     }
     notifyListeners();
   }
+  // void addItem(String productId, String title, double price, String imageUrl) {
+  //   if (_items.containsKey(productId)) {
+  //     //if the specific item exist then we increase the quantity
+  //     _items.update(
+  //       productId,
+  //       (existingCartItem) => CartItem(
+  //         id: existingCartItem.id,
+  //         title: existingCartItem.title,
+  //         imageUrl: existingCartItem.imageUrl,
+  //         price: existingCartItem.price,
+  //         quantity: existingCartItem.quantity + 1,
+  //       ),
+  //     );
+  //   } else {
+  //     //if the specificitem is not in cart yet, so we add
+  //     _items.putIfAbsent(
+  //       productId,
+  //       () => CartItem(
+  //         id: DateTime.now().toString(),
+  //         title: title,
+  //         imageUrl: imageUrl,
+  //         price: price,
+  //         quantity: 1,
+  //       ),
+  //     );
+  //   }
+  //   notifyListeners();
+  // }
 
   void removeItem(String productId) {
     _items.remove(productId);

@@ -1,9 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/provider/carts.dart';
 import 'package:shop_app/provider/products.dart';
 
-class ProductDetailsScreen extends StatelessWidget {
+class ProductDetailsScreen extends StatefulWidget {
   static const routeName = '/product-detail';
+
+  @override
+  _ProductDetailsScreenState createState() => _ProductDetailsScreenState();
+}
+
+class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
+  int quantity = 1;
+  void increment() {
+    setState(() {
+      quantity++;
+    });
+  }
+
+  void decrement() {
+    setState(() {
+      if (quantity <= 1) {
+        quantity = 1;
+      } else {
+        quantity--;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,6 +35,7 @@ class ProductDetailsScreen extends StatelessWidget {
 
     //Getting all products based on id
     final loadedProduct = Provider.of<Products>(context).findById(productId);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(loadedProduct.title),
@@ -65,11 +89,23 @@ class ProductDetailsScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.remove),
+                    IconButton(
+                      onPressed: () {
+                        decrement();
+                        // print(quantity);
+                      },
+                      icon: Icon(Icons.remove),
+                    ),
                     SizedBox(width: 10.0),
-                    Text('0'),
+                    Text(quantity.toString()),
                     SizedBox(width: 10.0),
-                    Icon(Icons.add),
+                    IconButton(
+                      onPressed: () {
+                        increment();
+                        // print(quantity);
+                      },
+                      icon: Icon(Icons.add),
+                    ),
                   ],
                 ),
                 SizedBox(height: 20.0),
@@ -92,7 +128,14 @@ class ProductDetailsScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Provider.of<Cart>(context, listen: false).addItem(
+                        productId,
+                        loadedProduct.title,
+                        loadedProduct.amount,
+                        loadedProduct.imageUrl,
+                        quantity);
+                  },
                 ),
               ],
             )
