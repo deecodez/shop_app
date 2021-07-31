@@ -19,18 +19,18 @@ class ProductDetailsScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            Container(
+              color: Colors.black54,
+              height: 300,
+              width: double.infinity,
+              child: Image.network(
+                loadedProduct.imageUrl,
+                fit: BoxFit.cover,
+              ),
+            ),
             Column(
               children: [
-                Container(
-                  color: Colors.black54,
-                  height: 300,
-                  width: double.infinity,
-                  child: Image.network(
-                    loadedProduct.imageUrl,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                SizedBox(height: 10.0),
+                // SizedBox(height: 10.0),
                 Text(
                   '\$${loadedProduct.amount}',
                   style: TextStyle(
@@ -39,10 +39,17 @@ class ProductDetailsScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 10.0),
+                Text(
+                  loadedProduct.title,
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                ),
+                SizedBox(height: 10.0),
                 Container(
                   width: double.infinity,
                   child: Text(
-                    loadedProduct.title,
+                    loadedProduct.description,
                     style: TextStyle(
                       fontSize: 16.0,
                     ),
@@ -52,16 +59,41 @@ class ProductDetailsScreen extends StatelessWidget {
                 ),
               ],
             ),
+            SizedBox(height: 120.0),
             Column(
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.remove),
+                    SizedBox(width: 10.0),
                     Text('0'),
+                    SizedBox(width: 10.0),
                     Icon(Icons.add),
                   ],
                 ),
-                TextButton(onPressed: () {}, child: Text('Add To Cart'))
+                SizedBox(height: 20.0),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      side: BorderSide(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Add To Cart',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  onPressed: () {},
+                ),
               ],
             )
           ],
