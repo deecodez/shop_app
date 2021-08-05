@@ -122,6 +122,40 @@ class Products with ChangeNotifier {
     return _items.firstWhere((prod) => prod.id == id);
   }
 
+  //To add New Product
+  void addProduct(Product product) {
+    var newProduct = Product(
+      title: product.title,
+      amount: product.amount,
+      description: product.description,
+      id: DateTime.now().toString(),
+      imageUrl: product.imageUrl,
+    );
+
+    _items.add(newProduct);
+
+    //To add at the start
+    // _items.insert(0, newProduct);
+    notifyListeners();
+  }
+
+  //to update product when editing a existing product
+  void updateproduct(String id, Product newProduct) {
+    final prodIndex = _items.indexWhere((prod) => prod.id == id);
+    if (prodIndex >= 0) {
+      _items[prodIndex] = newProduct;
+      notifyListeners();
+    } else {
+      print('.....');
+    }
+  }
+
+  //to remove or delete product
+  void deleteProduct(String id) {
+    _items.removeWhere((prod) => prod.id == id);
+    notifyListeners();
+  }
+
   //another alternative for filtering between showing favorite and all
   // void showFavorite() {
   //   _showFavoriteOnly = true;

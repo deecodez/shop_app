@@ -80,13 +80,57 @@ class ProductItem extends StatelessWidget {
             ),
             trailing: IconButton(
               onPressed: () {
-                cart.addItem(
-                  product.id,
-                  product.title,
-                  product.amount,
-                  product.imageUrl,
-                  1,
-                );
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                if (cart.items.containsKey(product.id)) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Already in Cart!'),
+                      duration: Duration(seconds: 3),
+                    ),
+                  );
+                } else {
+                  cart.addItem(
+                    product.id,
+                    product.title,
+                    product.amount,
+                    product.imageUrl,
+                    1,
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Added to Cart!'),
+                      duration: Duration(seconds: 3),
+                      action: SnackBarAction(
+                        label: 'UNDO',
+                        onPressed: () {
+                          cart.removeSingleProducts(product.id);
+                        },
+                      ),
+                    ),
+                  );
+                }
+                // if (cart.items.containsKey(product.id)) {
+                //   ScaffoldMessenger.of(context).showSnackBar(
+                //     SnackBar(
+                //       content: Text('Already in Cart!'),
+                //       duration: Duration(seconds: 3),
+                //     ),
+                //   );
+                // } else {
+                //   ScaffoldMessenger.of(context).showSnackBar(
+                //     SnackBar(
+                //       content: Text('Added to Cart!'),
+                //       duration: Duration(seconds: 3),
+                //       action: SnackBarAction(
+                //         label: 'UNDO',
+                //         onPressed: () {
+                //           cart.removeSingleProducts(product.id);
+                //         },
+                //       ),
+                //     ),
+                //   );
+                // }
+
                 // print(product.amount);
                 // print(cart.items);
               },

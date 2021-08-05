@@ -23,6 +23,29 @@ class CartItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dismissible(
       key: ValueKey(id),
+      confirmDismiss: (direction) {
+        return showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text('Are you sure?'),
+            content: Text('Do You want to remove item from cart'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop(false);
+                },
+                child: Text('No'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop(true);
+                },
+                child: Text('Yes'),
+              ),
+            ],
+          ),
+        );
+      },
       background: Container(
         color: Colors.red,
         child: Icon(
@@ -113,8 +136,29 @@ class CartItemWidget extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {
-                  Provider.of<Cart>(context, listen: false)
-                      .removeItem(productId);
+                  showDialog(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      title: Text('Are you sure?'),
+                      content: Text('Do You want to remove item from cart'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(ctx).pop(false);
+                          },
+                          child: Text('No'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Provider.of<Cart>(context, listen: false)
+                                .removeItem(productId);
+                            Navigator.of(ctx).pop(true);
+                          },
+                          child: Text('Yes'),
+                        ),
+                      ],
+                    ),
+                  );
                 },
                 icon: Icon(
                   Icons.delete,
