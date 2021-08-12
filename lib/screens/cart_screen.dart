@@ -40,21 +40,7 @@ class CartScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  TextButton(
-                    child: Text(
-                      'check out'.toUpperCase(),
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    ),
-                    onPressed: () {
-                      Provider.of<Orders>(context, listen: false).addOrder(
-                        cart.items.values.toList(),
-                        cart.totalAmount,
-                      );
-                      cart.clearCartAfterOrder();
-                    },
-                  ),
+                  CheckOutButton(cart: cart),
                 ],
               ),
             ),
@@ -85,6 +71,50 @@ class CartScreen extends StatelessWidget {
                 ),
         ],
       ),
+    );
+  }
+}
+
+class CheckOutButton extends StatefulWidget {
+  const CheckOutButton({
+    Key? key,
+    required this.cart,
+  }) : super(key: key);
+
+  final Cart cart;
+
+  @override
+  _CheckOutButtonState createState() => _CheckOutButtonState();
+}
+
+class _CheckOutButtonState extends State<CheckOutButton> {
+  var _isLoading = false;
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      child: _isLoading
+          ? CircularProgressIndicator()
+          : Text(
+              'check out'.toUpperCase(),
+              style: TextStyle(
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+      onPressed: (widget.cart.totalAmount <= 0 || _isLoading)
+          ? null
+          : () async {
+              setState(() {
+                _isLoading = true;
+              });
+              await Provider.of<Orders>(context, listen: false).addOrder(
+                widget.cart.items.values.toList(),
+                widget.cart.totalAmount,
+              );
+              setState(() {
+                _isLoading = false;
+              });
+              widget.cart.clearCartAfterOrder();
+            },
     );
   }
 }
