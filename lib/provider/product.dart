@@ -25,18 +25,19 @@ class Product with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> isToggled() async {
+// TODO: Having issue with adding favorite
+  Future<void> isToggled(String? token, String? userId) async {
     final oldStatus = isFavorite;
     isFavorite = !isFavorite;
     notifyListeners();
     var url = Uri.parse(
-        'https://myshopapp-cfd09-default-rtdb.firebaseio.com/products/$id.json');
+        'https://myshopapp-cfd09-default-rtdb.firebaseio.com/userFavorite/$userId/$id.json?auth=$token');
     try {
-      var response = await http.patch(
+      var response = await http.put(
         url,
-        body: json.encode({
-          'isFavorite': isFavorite,
-        }),
+        body: json.encode(
+          isFavorite,
+        ),
       );
       if (response.statusCode >= 400) {
         _setFavVal(oldStatus);
@@ -45,7 +46,6 @@ class Product with ChangeNotifier {
     _setFavVal(oldStatus);
   }
 }
-
 
 // https://unsplash.com/photos/LxVxPA1LOVM
 // https://unsplash.com/photos/164_6wVEHfI

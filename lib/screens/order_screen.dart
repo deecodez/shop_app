@@ -56,7 +56,8 @@ class _OrderScreenState extends State<OrderScreen> {
           if (dataSnapShot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           } else if (dataSnapShot.error != null) {
-            return Center(child: Text('An error occurred!'));
+            //TODO: To fix null is not a subtype of map from api response when there is no order attached to user
+            return Center(child: Text('An error occurred! No Order yet'));
           } else {
             return Consumer<Orders>(
               builder: (ctx, orderData, child) => orderData.orders.isEmpty

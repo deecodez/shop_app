@@ -107,6 +107,11 @@ class Products with ChangeNotifier {
 //another alternative for filtering between showing favorite and all
   // var _showFavoriteOnly = false;
 
+  //Attached token and userId
+  final String? authToken;
+  final String? userId;
+  Products(this.authToken, this.userId, this._items);
+
 //Getter that allow to get access to the private variable _items
   List<Product> get item {
     //another alternative for filtering between showing favorite and all
@@ -127,12 +132,24 @@ class Products with ChangeNotifier {
   }
 
   //To get Product from the server
-  Future<void> getAndFetchProduct() async {
+  Future<void> getAndFetchProduct([bool filterByUser = false]) async {
+    //Filter and getting product by user from firebase
+    final filterString =
+        filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
+
     var url = Uri.parse(
-        'https://myshopapp-cfd09-default-rtdb.firebaseio.com/products.json');
+        'https://myshopapp-cfd09-default-rtdb.firebaseio.com/products.json?auth=$authToken&$filterString');
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      if (extractedData == null) {
+        return;
+      }
+      url = Uri.parse(
+          'https://myshopapp-cfd09-default-rtdb.firebaseio.com/userFavorite/$userId.json?auth=$authToken');
+
+      final favResponse = await http.get(url);
+      final favData = json.decode(favResponse.body);
       final List<Product> loadedProduct = [];
       extractedData.forEach((prodId, prodData) {
         loadedProduct.add(Product(
@@ -141,7 +158,8 @@ class Products with ChangeNotifier {
           description: prodData['description'],
           title: prodData['title'],
           imageUrl: prodData['imageUrl'],
-          isFavorite: prodData['isFavorite'],
+          isFavorite: favData == null ? false : favData[prodId] ?? false,
+          // isFavorite: prodData['isFavorite'],
         ));
       });
 
@@ -158,7 +176,7 @@ class Products with ChangeNotifier {
   //To add New Product
   Future<void> addProduct(Product product) async {
     var url = Uri.parse(
-        'https://myshopapp-cfd09-default-rtdb.firebaseio.com/products.json');
+        'https://myshopapp-cfd09-default-rtdb.firebaseio.com/products.json?auth=$authToken');
     try {
       var response = await http.post(
         url,
@@ -167,7 +185,8 @@ class Products with ChangeNotifier {
           'description': product.description,
           'imageUrl': product.imageUrl,
           'amount': product.amount,
-          'isFavorite': product.isFavorite,
+          'creatorId': userId,
+          // 'isFavorite': product.isFavorite,
         }),
       );
       var newProduct = Product(
@@ -200,7 +219,7 @@ class Products with ChangeNotifier {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
       var url = Uri.parse(
-          'https://myshopapp-cfd09-default-rtdb.firebaseio.com/products/$id.json');
+          'https://myshopapp-cfd09-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken');
       await http.patch(url,
           body: jsonEncode({
             'title': newProduct.title,
@@ -218,7 +237,7 @@ class Products with ChangeNotifier {
   //to remove or delete product
   Future<void> deleteProduct(String id) async {
     var url = Uri.parse(
-        'https://myshopapp-cfd09-default-rtdb.firebaseio.com/products/$id.json');
+        'https://myshopapp-cfd09-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken');
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
     var existingProduct = _items[existingProductIndex];
     _items.removeAt(existingProductIndex);
